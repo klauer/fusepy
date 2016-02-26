@@ -24,7 +24,7 @@ setup(
     maintainer = 'Terence Honles',
     maintainer_email = 'terence@honles.com',
     license = 'ISC',
-    py_modules=['fuse'],
+    py_modules=['fuse', 'fusell'],
     url = 'http://github.com/terencehonles/fusepy',
 
     use_2to3 = True,
