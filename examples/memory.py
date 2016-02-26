@@ -53,7 +53,7 @@ class Memory(LoggingMixIn, Operations):
         try:
             return attrs[name]
         except KeyError:
-            return ''       # Should return ENOATTR
+            return b''       # Should return ENOATTR
 
     def listxattr(self, path):
         attrs = self.files[path].get('attrs', {})
