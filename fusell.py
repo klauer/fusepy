@@ -300,7 +300,7 @@ class FUSELL(object):
 
         self.libfuse.fuse_session_remove_chan(chan)
         self.libfuse.fuse_session_destroy(session)
-        self.libfuse.fuse_unmount(mountpoint, chan)
+        self.libfuse.fuse_unmount(mountpoint.encode(self.encoding), chan)
 
     def reply_err(self, req, err):
         return self.libfuse.fuse_reply_err(req, err)
