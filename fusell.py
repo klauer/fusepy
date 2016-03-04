@@ -34,8 +34,9 @@ class LibFUSE(CDLL):
 
         self.fuse_mount.argtypes = (c_char_p, POINTER(fuse_args))
         self.fuse_mount.restype = c_void_p
-        self.fuse_lowlevel_new.argtypes = (POINTER(fuse_args), POINTER(fuse_lowlevel_ops),
-                                            c_size_t, c_void_p)
+        self.fuse_lowlevel_new.argtypes = (POINTER(fuse_args),
+                                           POINTER(fuse_lowlevel_ops),
+                                           c_size_t, c_void_p)
         self.fuse_lowlevel_new.restype = c_void_p
         self.fuse_set_signal_handlers.argtypes = (c_void_p,)
         self.fuse_session_add_chan.argtypes = (c_void_p, c_void_p)
@@ -54,6 +55,7 @@ class LibFUSE(CDLL):
         self.fuse_reply_open.argtypes = (fuse_req_t, c_void_p)
         self.fuse_reply_buf.argtypes = (fuse_req_t, c_char_p, c_size_t)
         self.fuse_reply_write.argtypes = (fuse_req_t, c_size_t)
+        self.fuse_reply_readlink.argtypes = (fuse_req_t, c_char_p)
 
         self.fuse_add_direntry.argtypes = (c_void_p, c_char_p, c_size_t, c_char_p,
                                             c_stat_p, c_off_t)
@@ -318,8 +320,8 @@ class FUSELL(object):
         st = dict_to_stat(attr)
         return self.libfuse.fuse_reply_attr(req, byref(st), c_double(attr_timeout))
 
-    def reply_readlink(self, req, *args):
-        pass    # XXX
+    def reply_readlink(self, req, buf):
+        return self.libfuse.fuse_reply_readlink(req, buf)
 
     def reply_open(self, req, d):
         fi = fuse_file_info(**d)
@@ -374,6 +376,9 @@ class FUSELL(object):
 
     def fuse_read(self, req, ino, size, off, fi):
         self.read(req, ino, size, off, fi)
+
+    def fuse_readlink(self, req, ino):
+        self.readlink(req, ino)
 
     def fuse_write(self, req, ino, buf, size, off, fi):
         buf_str = string_at(buf, size)
